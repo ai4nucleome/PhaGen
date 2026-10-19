@@ -1,5 +1,7 @@
 # PhaGen
 
+🌐 [**Project page**](https://ai4nucleome.github.io/PhaGen/) &nbsp;|&nbsp; 🤗 [**Hugging Face**](https://huggingface.co/YusenWithR/PhaGen) &nbsp;|&nbsp; 📦 [**Reproducibility**](https://zenodo.org/records/23477083)
+
 PhaGen is a 150M-parameter model for generating and analyzing bacteriophage DNA.
 It learns to reconstruct masked DNA and generates new sequences by filling in
 masked positions over multiple steps. The same pretrained model also provides
@@ -138,7 +140,8 @@ gh_phagen/
 ```
 
 Each evaluation task has a README describing its benchmark. Evaluation data,
-results, plotting code and figures will be released separately on Zenodo.
+results, plotting code and figures are available on
+[Zenodo](https://zenodo.org/records/23477083).
 
 The public model classes are `PhaGenModel` and `PhaGenConfig`, with
 `model_type="phagen"`.
