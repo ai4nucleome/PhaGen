@@ -1,0 +1,48 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "phagen-training"
+version = "0.0.1"
+description = "PhaGen paper training reference based on the VeOmni framework"
+readme = "README.md"
+requires-python = ">=3.10"
+license = {file = "LICENSE"}
+dependencies = [
+    "torch>=2.5,<2.6",
+    "torchdata==0.11.0",
+    "transformers==4.54.1",
+    "accelerate>=1.0,<2",
+    "einops>=0.8,<0.9",
+    "beartype>=0.19,<0.23",
+    "safetensors>=0.4.3,<1",
+    "numpy>=1.26,<3",
+    "packaging>=23",
+    "psutil>=5.9",
+    "PyYAML>=6",
+    "tqdm>=4.66",
+    "datasets>=3,<5",
+    "sortedcontainers>=2.4",
+    "pandas>=2,<3",
+    "pyarrow>=15",
+    "wandb>=0.19,<1",
+    "bytecheckpoint==0.0.2",
+    "Pillow>=10",
+]
+
+[project.optional-dependencies]
+cuda = ["flash-attn>=2.6,<2.8", "liger-kernel>=0.4.1,<1"]
+test = ["pytest>=8,<9"]
+
+[tool.setuptools]
+license-files = ["LICENSE", "NOTICE.md", "licenses/*.txt"]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["veomni", "veomni.*"]
+namespaces = false
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]

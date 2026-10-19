@@ -1,0 +1,6 @@
+# CPU data preparation and RidgeCV evaluation.
+numpy==2.2.6
+pandas==2.3.3
+scipy==1.15.3
+scikit-learn==1.7.2
+biopython==1.86

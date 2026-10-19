@@ -1,0 +1,8 @@
+# Data preparation, frozen-feature regression, and plotting.
+numpy==2.2.6
+pandas==2.3.3
+scipy==1.15.3
+scikit-learn==1.7.2
+biopython==1.86
+openpyxl==3.1.5
+matplotlib==3.10.7

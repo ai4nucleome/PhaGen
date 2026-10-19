@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f3e8ce">
+  <meta name="description" content="PhaGen: a 150M-parameter masked diffusion model for generating and understanding bacteriophage DNA.">
+  <meta property="og:title" content="PhaGen — A unified model for bacteriophage DNA">
+  <meta property="og:description" content="DNA generation, sequence embeddings and masked-region scoring in one pretrained model.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://ai4nucleome.github.io/PhaGen/">
+  <meta property="og:image" content="https://ai4nucleome.github.io/PhaGen/assets/landscape-tall.png">
+  <link rel="canonical" href="https://ai4nucleome.github.io/PhaGen/">
+  <title>PhaGen — A unified model for bacteriophage DNA</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="styles.css?v=generation-9">
+  <script src="app.js?v=generation-9" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main" data-i18n="skip">Skip to content</a>
+  <header class="site-header">
+    <div class="nav-wrap">
+      <a class="brand" href="https://github.com/ai4nucleome" aria-label="A\4Nucleome on GitHub">
+        <span>A\4Nucleome</span>
+      </a>
+      <nav class="main-nav" id="main-nav" aria-label="Main navigation">
+        <a href="#overview" data-i18n="navOverview">Overview</a>
+        <a href="#framework" data-i18n="navFramework">Framework</a>
+        <a href="#benchmarks" data-i18n="navTasks">Benchmarks</a>
+        <a href="#resources" data-i18n="navResources">Resources</a>
+      </nav>
+      <div class="nav-actions">
+        <button class="language-button" id="language-button" type="button" aria-label="切换至中文">中文</button>
+        <a class="nav-model" href="https://huggingface.co/YusenWithR/PhaGen" target="_blank" rel="noopener noreferrer"><span data-i18n="getModel">Get the model</span><span aria-hidden="true">↗</span></a>
+        <button class="menu-button" id="menu-button" aria-expanded="false" aria-controls="main-nav" aria-label="Open menu"><span></span><span></span></button>
+      </div>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="hero" aria-labelledby="hero-title">
+      <img class="hero-art" src="assets/landscape-tall.png" width="1536" height="1024" alt="" fetchpriority="high">
+      <div class="hero-wash"></div>
+      <div class="hero-content">
+        <h1 id="hero-title">PhaGen</h1>
+      </div>
+    </section>
+
+    <div class="content">
+      <section class="content-section" id="overview" aria-labelledby="overview-title">
+        <h2 id="overview-title" data-i18n="overviewTitle">Overview</h2>
+        <p data-i18n="overviewDescription">PhaGen is a 150M-parameter model for generating and analyzing bacteriophage DNA. It learns by reconstructing masked DNA and generates sequences by filling masked positions over multiple steps.</p>
+        <p data-i18n="overviewDetails">The same pretrained model provides sequence embeddings and masked-region scores for downstream prediction. The repository includes model code, usage examples, and training code based on VeOmni.</p>
+        <div class="metrics-wrap">
+          <dl class="metrics">
+            <div><dt>150M</dt><dd data-i18n="metricParameters">Parameters</dd></div>
+            <div><dt>131,072</dt><dd data-i18n="metricContext">Token context</dd></div>
+            <div><dt>964</dt><dd data-i18n="metricEmbedding">Embedding dimensions</dd></div>
+            <div><dt>7</dt><dd data-i18n="metricBenchmarks">Prediction benchmarks</dd></div>
+          </dl>
+        </div>
+      </section>
+
+      <section class="content-section" id="framework" aria-labelledby="framework-title">
+        <h2 id="framework-title" data-i18n="frameworkTitle">Model framework</h2>
+        <p data-i18n="frameworkDescription">PhaGen uses three hierarchical stages to combine nucleotide-level information with broader sequence context. Figure 1 summarizes the training data, masked-diffusion architecture, and evaluated tasks.</p>
+        <figure class="paper-figure">
+          <button class="figure-button" id="figure-button" type="button" aria-haspopup="dialog" aria-label="Enlarge Figure 1">
+            <img src="assets/figure1.png" width="2200" height="1539" alt="PhaGen paper Figure 1 showing the training corpus, three-stage masked diffusion architecture, and generation and prediction tasks." loading="lazy">
+          </button>
+          <figcaption><span data-i18n="figureCaption">Figure 1. Training data, model architecture, and generation and prediction tasks.</span> <span class="figure-hint" data-i18n="figureHint">Click the figure to enlarge.</span></figcaption>
+        </figure>
+        <div class="generation-demo" id="generation-demo" aria-labelledby="generation-title">
+          <div class="generation-heading">
+            <h3 id="generation-title" data-i18n="generationTitle">How DNA is generated</h3>
+            <div class="generation-controls">
+              <button id="generation-play" type="button" aria-pressed="false" data-i18n="generationPlay">Play</button>
+              <button id="generation-reset" type="button" data-i18n="generationReset">Reset</button>
+            </div>
+          </div>
+          <p class="generation-intro" data-i18n="generationIntro">Both examples start from the same 4-nucleotide prefix. M denotes a masked position; blank cells are not yet generated.</p>
+          <div class="generation-comparison">
+            <section class="generation-panel" aria-labelledby="phagen-generation-title">
+              <h4 id="phagen-generation-title">PhaGen <span data-i18n="generationDiffusion">Masked diffusion</span></h4>
+              <p data-i18n="generationPhagenText">Fills multiple masked positions per iteration using bidirectional context.</p>
+              <div class="generation-tokens" id="phagen-tokens" aria-hidden="true"></div>
+              <div class="generation-counts"><span><span data-i18n="generationIterations">Illustrated iterations</span> <strong id="phagen-iterations">0</strong></span><span><span data-i18n="generationNewBases">New bases</span> <strong id="phagen-new-bases">0 / 44</strong></span></div>
+            </section>
+            <section class="generation-panel" aria-labelledby="evo-generation-title">
+              <h4 id="evo-generation-title">Evo <span data-i18n="generationAutoregressive">Autoregressive</span></h4>
+              <p data-i18n="generationEvoText">Reads the existing prefix and appends one nucleotide at a time, from left to right.</p>
+              <div class="generation-tokens" id="evo-tokens" aria-hidden="true"></div>
+              <div class="generation-counts"><span><span data-i18n="generationIterations">Illustrated iterations</span> <strong id="evo-iterations">0</strong></span><span><span data-i18n="generationNewBases">New bases</span> <strong id="evo-new-bases">0 / 44</strong></span></div>
+            </section>
+          </div>
+          <div class="generation-footer"><span id="generation-status" role="status" aria-live="polite" data-i18n="generationReady">Ready</span><span data-i18n="generationNote">Illustrative sequence and iterations; animation timing does not represent inference time.</span></div>
+        </div>
+      </section>
+
+      <section class="content-section" id="benchmarks" aria-labelledby="benchmarks-title">
+        <h2 id="benchmarks-title" data-i18n="benchmarksTitle">Prediction benchmarks</h2>
+        <p data-i18n="benchmarksDescription">The pretrained model is evaluated on seven sequence-understanding tasks using sequence scores or embeddings.</p>
+        <table class="benchmark-table">
+          <thead><tr><th scope="col" data-i18n="taskColumn">Task</th><th scope="col" data-i18n="evaluationColumn">Evaluation</th></tr></thead>
+          <tbody>
+            <tr><th scope="row" data-i18n="task1">Gene essentiality</th><td data-i18n="task1Text">Zero-shot prediction for lambda and P1 genes.</td></tr>
+            <tr><th scope="row" data-i18n="task2">T7 SNP mutability</th><td data-i18n="task2Text">Predict single-nucleotide mutation patterns across 59 T7 genes.</td></tr>
+            <tr><th scope="row" data-i18n="task3">Phage promoter recognition</th><td data-i18n="task3Text">Classify promoter and non-promoter DNA windows.</td></tr>
+            <tr><th scope="row" data-i18n="task4">Virion-protein subtypes</th><td data-i18n="task4Text">Predict seven subtypes from protein-coding DNA.</td></tr>
+            <tr><th scope="row" data-i18n="task5">Host prediction</th><td data-i18n="task5Text">Predict host species from tail-protein coding DNA.</td></tr>
+            <tr><th scope="row" data-i18n="task6">infA mutation fitness</th><td data-i18n="task6Text">Predict fitness from E. coli infA variant sequences.</td></tr>
+            <tr><th scope="row" data-i18n="task7">TEM-1 β-lactamase fitness</th><td data-i18n="task7Text">Predict fitness from TEM-1 variant coding sequences.</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section class="content-section" id="quickstart" aria-labelledby="quickstart-title">
+        <h2 id="quickstart-title" data-i18n="quickstartTitle">Quick start</h2>
+        <p data-i18n="quickstartDescription">Install PhaGen from the repository root. The examples support a downloaded checkpoint or a local model directory.</p>
+        <p class="requirements" data-i18n="requirements">Python 3.10+ · PyTorch 2.5 · Transformers 4.54.1</p>
+        <div class="code-block">
+          <div class="code-tools"><button type="button" id="copy-button" data-i18n="copy">Copy</button></div>
+          <pre><code id="code-content">git clone https://github.com/ai4nucleome/PhaGen.git
+cd PhaGen
+python -m pip install -e .</code></pre>
+        </div>
+        <p><a href="https://github.com/ai4nucleome/PhaGen" target="_blank" rel="noopener noreferrer" data-i18n="fullDocs">See the GitHub README for generation and embedding examples.</a></p>
+      </section>
+
+      <section class="content-section" id="resources" aria-labelledby="resources-title">
+        <h2 id="resources-title" data-i18n="resourcesTitle">Resources</h2>
+        <dl class="resource-list">
+          <div><dt><a href="https://github.com/ai4nucleome/PhaGen" target="_blank" rel="noopener noreferrer">GitHub</a></dt><dd data-i18n="resourceCodeText">Model implementation, examples, VeOmni training, and evaluation code.</dd></div>
+          <div><dt><a href="https://huggingface.co/YusenWithR/PhaGen" target="_blank" rel="noopener noreferrer">Hugging Face</a></dt><dd data-i18n="resourceModelText">Pretrained weights, model configuration, and tokenizer files.</dd></div>
+          <div><dt>Zenodo <span class="release-status" data-i18n="comingSoon">Coming soon</span></dt><dd data-i18n="resourceDataText">Evaluation data, formal results, plotting code, and figures. The archive link will be added after release.</dd></div>
+        </dl>
+      </section>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-content">
+      <p><a href="mailto:yhou925@connect.hkust-gz.edu.cn">yhou925@connect.hkust-gz.edu.cn</a></p>
+      <p><span data-i18n="footerBuilt">Training framework:</span> <a href="https://github.com/ByteDance-Seed/VeOmni" target="_blank" rel="noopener noreferrer">VeOmni</a><span class="footer-separator">·</span><a href="https://github.com/ai4nucleome/PhaGen" target="_blank" rel="noopener noreferrer" data-i18n="footerLicense">License and attribution</a></p>
+      <p class="art-credit" data-i18n="footerArt">Cover illustration generated with AI.</p>
+    </div>
+  </footer>
+
+  <dialog id="figure-dialog" class="figure-dialog" aria-labelledby="figure-title">
+    <div class="dialog-heading"><h2 id="figure-title" data-i18n="figureTitle">Figure 1 · Overview of PhaGen</h2><button id="close-figure" type="button" aria-label="Close figure">×</button></div>
+    <img src="assets/figure1.png" width="2200" height="1539" alt="PhaGen paper Figure 1 showing the training corpus, three-stage masked diffusion architecture, and generation and prediction tasks." loading="lazy">
+    <p data-i18n="figureCaption">Figure 1. Training data, model architecture, and generation and prediction tasks.</p>
+  </dialog>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+</body>
+</html>

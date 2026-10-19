@@ -1,0 +1,29 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "phagen"
+version = "0.1.0"
+description = "Hierarchical masked diffusion for bacteriophage DNA"
+readme = "README.md"
+requires-python = ">=3.10"
+license = {file = "LICENSE"}
+dependencies = [
+    "torch>=2.5,<2.6",
+    "transformers==4.54.1",
+    "einops>=0.8,<0.9",
+    "accelerate>=1.0,<2",
+    "safetensors>=0.4.3,<1",
+    "packaging>=23",
+]
+
+[project.optional-dependencies]
+test = ["pytest>=8,<9"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
