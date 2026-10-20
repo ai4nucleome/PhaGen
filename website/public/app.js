@@ -28,7 +28,7 @@ const translations = {
     quickstartTitle: "Quick start", quickstartDescription: "Install PhaGen from the repository root. The examples support a downloaded checkpoint or a local model directory.",
     requirements: "Python 3.10+ · PyTorch 2.5 · Transformers 4.54.1", fullDocs: "See the GitHub README for generation and embedding examples.",
     copy: "Copy", copied: "Code copied", copyFailed: "Select and copy the code manually.",
-    resourcesTitle: "Resources", resourceCodeText: "Model implementation, examples, VeOmni training, and evaluation code.", resourceModelText: "Pretrained weights, model configuration, and tokenizer files.", comingSoon: "Coming soon", resourceDataText: "Evaluation data, formal results, plotting code, and figures. The archive link will be added after release.",
+    resourcesTitle: "Resources", resourceCodeText: "Model implementation, examples, VeOmni training, and evaluation code.", resourceModelText: "Pretrained weights, model configuration, and tokenizer files.", resourceDataText: "Evaluation data, formal results, plotting code, and figures.",
     footerBuilt: "Training framework:", footerLicense: "License and attribution", footerArt: "Cover illustration generated with AI."
   },
   zh: {
@@ -58,7 +58,7 @@ const translations = {
     quickstartTitle: "快速开始", quickstartDescription: "在仓库根目录安装 PhaGen。示例支持加载已下载的模型权重或本地模型目录。",
     requirements: "Python 3.10+ · PyTorch 2.5 · Transformers 4.54.1", fullDocs: "生成 DNA 和提取表征的示例见 GitHub README。",
     copy: "复制", copied: "代码已复制", copyFailed: "请手动选中并复制代码。",
-    resourcesTitle: "开放资源", resourceCodeText: "模型实现、使用示例、基于 VeOmni 的训练代码和评测代码。", resourceModelText: "预训练权重、模型配置和分词器文件。", comingSoon: "待发布", resourceDataText: "评测数据、正式结果、绘图代码和图件。材料发布后将在此补充归档链接。",
+    resourcesTitle: "开放资源", resourceCodeText: "模型实现、使用示例、基于 VeOmni 的训练代码和评测代码。", resourceModelText: "预训练权重、模型配置和分词器文件。", resourceDataText: "评测数据、正式结果、绘图代码和图件。",
     footerBuilt: "训练框架：", footerLicense: "许可证与归属声明", footerArt: "封面插画由 AI 生成。"
   }
 };

@@ -16,8 +16,8 @@ in `.github/workflows/deploy-pages.yml` publishes only `website/public/`.
 
 The page supports English and Chinese, with an overview, paper Figure 1, seven
 prediction benchmarks, installation instructions, and resource links. The landscape
-is an original AI-generated illustration. The Zenodo link will be added when the
-archive is released.
+is an original AI-generated illustration. Evaluation materials are available on
+[Zenodo](https://zenodo.org/records/23477083).
 
 A generation animation compares PhaGen's masked diffusion with Evo's left-to-right
 autoregressive decoding. It uses a shared prefix and illustrative sequence; playback
