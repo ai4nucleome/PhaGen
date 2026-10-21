@@ -29,7 +29,8 @@ const translations = {
     requirements: "Python 3.10+ · PyTorch 2.5 · Transformers 4.54.1", fullDocs: "See the GitHub README for generation and embedding examples.",
     copy: "Copy", copied: "Code copied", copyFailed: "Select and copy the code manually.",
     resourcesTitle: "Resources", resourceCodeText: "Model implementation, examples, VeOmni training, and evaluation code.", resourceModelText: "Pretrained weights, model configuration, and tokenizer files.", resourceDataText: "Evaluation data, formal results, plotting code, and figures.",
-    footerBuilt: "Training framework:", footerLicense: "License and attribution", footerArt: "Cover illustration generated with AI."
+    authorsTitle: "Authors", authorsAffiliation: "Data Science and Analytics Thrust, Hong Kong University of Science and Technology (Guangzhou), Guangzhou 511455, China.", correspondingAuthor: "* Corresponding author:",
+    footerContact: "Project contact:", footerBuilt: "Training framework:", footerLicense: "License and attribution", footerArt: "Cover illustration generated with AI."
   },
   zh: {
     skip: "跳转到正文", navOverview: "项目简介", navFramework: "模型框架", navTasks: "评测任务", navResources: "开放资源", getModel: "获取模型",
@@ -59,7 +60,8 @@ const translations = {
     requirements: "Python 3.10+ · PyTorch 2.5 · Transformers 4.54.1", fullDocs: "生成 DNA 和提取表征的示例见 GitHub README。",
     copy: "复制", copied: "代码已复制", copyFailed: "请手动选中并复制代码。",
     resourcesTitle: "开放资源", resourceCodeText: "模型实现、使用示例、基于 VeOmni 的训练代码和评测代码。", resourceModelText: "预训练权重、模型配置和分词器文件。", resourceDataText: "评测数据、正式结果、绘图代码和图件。",
-    footerBuilt: "训练框架：", footerLicense: "许可证与归属声明", footerArt: "封面插画由 AI 生成。"
+    authorsTitle: "作者", authorsAffiliation: "香港科技大学（广州）数据科学与分析学域，中国广州，511455。", correspondingAuthor: "* 通讯作者：",
+    footerContact: "项目联系：", footerBuilt: "训练框架：", footerLicense: "许可证与归属声明", footerArt: "封面插画由 AI 生成。"
   }
 };
 
