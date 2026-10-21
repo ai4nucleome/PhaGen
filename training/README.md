@@ -120,10 +120,8 @@ python training/scripts/split_parquet.py \
   --val-output /path/to/validation.parquet
 ```
 
-The paper split has 93,683 training records and 4,982 validation records. Record
-IDs are disjoint, but 549 identical DNA sequence contents occur in both partitions,
-affecting 553 validation records (11.10%). The splitter does not deduplicate or
-alter DNA sequences.
+Record IDs for the training data were obtained from the
+[megaDNA training sequence list](https://github.com/lingxusb/megaDNA/blob/main/training/training_seqs.tsv).
 
 ## Lightweight checks
 
