@@ -12,24 +12,37 @@ sequence embeddings and scores for prediction tasks.
 *Figure 1 from the paper: training data, model architecture and evaluated tasks.*
 
 Model weights and tokenizer files are available at
-[YusenWithR/PhaGen](https://huggingface.co/YusenWithR/PhaGen). This repository
-includes the model implementation, examples,
-[training code](training/README.md),
-[generation analyses](evaluation/generation/README.md) and
-[seven prediction benchmarks](evaluation/prediction/README.md).
-Training uses the [VeOmni framework](https://github.com/ByteDance-Seed/VeOmni).
+[YusenWithR/PhaGen](https://huggingface.co/YusenWithR/PhaGen).
 
 The model has three stages with dimensions of 512, 256 and 196, with eight layers
 per stage. It supports up to 131,072 tokens (`max_seq_len` = 128 x 64 x 16),
 including sequence boundaries and padding. Its nine-token vocabulary is `[BOS]`,
 `A`, `T`, `C`, `G`, `[EOS]`, `[MASK]`, `[PAD]` and `[UNK]`.
 
+## Training and evaluation
+
+| Component | Code | Documentation |
+| --- | --- | --- |
+| Training with [VeOmni](https://github.com/ByteDance-Seed/VeOmni) | [training/](training/) | [Environment setup, configuration, and training commands](training/README.md) |
+| Genome generation and seven prediction benchmarks | [evaluation/](evaluation/) | [Task descriptions and evaluation materials](evaluation/README.md) |
+
+Training requires separately prepared training/validation datasets and a local
+initialization checkpoint. See the training documentation for data requirements
+and launch instructions.
+
+Evaluation data, formal results, plotting code, and figures are available on
+[Zenodo](https://zenodo.org/records/23477083).
+Download and extract `PhaGen-complete.zip`; the evaluation materials are under
+`PhaGen/evaluation/`.
+
 ## Install
 
-Use Python 3.10+. Run this command from the repository root to install PhaGen and
-its dependencies, including PyTorch 2.5 and Transformers 4.54.1:
+Use Python 3.10+. Clone the repository and install PhaGen and its dependencies,
+including PyTorch 2.5 and Transformers 4.54.1:
 
 ```bash
+git clone https://github.com/ai4nucleome/PhaGen.git
+cd PhaGen
 python -m pip install -e .
 ```
 
@@ -93,7 +106,7 @@ directory and `local_files_only=True` to both loaders. Use `--help` for all opti
 ## Layout
 
 ```text
-gh_phagen/
+PhaGen/
 ├── assets/figure1.png                      Paper overview figure
 ├── src/phagen/
 │   ├── __init__.py                         Public API exports
@@ -138,10 +151,6 @@ gh_phagen/
         ├── supl_task1_infA_fitness/         infA mutation fitness
         └── supl_task2_beta-lactamase_fitness/  TEM-1 beta-lactamase fitness
 ```
-
-Each evaluation task has a README describing its benchmark. Evaluation data,
-results, plotting code and figures are available on
-[Zenodo](https://zenodo.org/records/23477083).
 
 The public model classes are `PhaGenModel` and `PhaGenConfig`, with
 `model_type="phagen"`.
