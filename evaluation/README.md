@@ -5,7 +5,8 @@ Evaluation code for genome-scale DNA generation and seven sequence-understanding
 Data, formal results, plotting code, and figures are available on
 [Zenodo](https://zenodo.org/records/23477083).
 Download `PhaGen-complete.zip` for the complete materials, which preserve the
-evaluation directory layout. Model weights and full external reference
+evaluation directory layout. The archive includes the PhaGen checkpoint under
+`PhaGen/models/PhaGen/`. Baseline model weights and full external reference
 databases are obtained separately.
 
 ## Generation

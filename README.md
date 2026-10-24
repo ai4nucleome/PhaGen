@@ -12,7 +12,8 @@ sequence embeddings and scores for prediction tasks.
 *Figure 1 from the paper: training data, model architecture and evaluated tasks.*
 
 Model weights and tokenizer files are available at
-[YusenWithR/PhaGen](https://huggingface.co/YusenWithR/PhaGen).
+[YusenWithR/PhaGen](https://huggingface.co/YusenWithR/PhaGen). The Zenodo archive
+also includes this checkpoint under `PhaGen/models/PhaGen/`.
 
 The model has three stages with dimensions of 512, 256 and 196, with eight layers
 per stage. It supports up to 131,072 tokens (`max_seq_len` = 128 x 64 x 16),
@@ -102,6 +103,14 @@ Both example scripts default to `YusenWithR/PhaGen`, CPU and float32. Use
 and full-length generation require a suitable GPU. For offline use, pass
 `--model /path/to/local/checkpoint --local-files-only`; in Python, pass the local
 directory and `local_files_only=True` to both loaders. Use `--help` for all options.
+
+From the extracted archive's `PhaGen/` directory, use
+`--model models/PhaGen --local-files-only` with either example. In Python:
+
+```python
+tokenizer = load_tokenizer("models/PhaGen", local_files_only=True)
+model = load_model("models/PhaGen", device="cpu", local_files_only=True)
+```
 
 ## Layout
 
