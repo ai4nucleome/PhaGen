@@ -111,10 +111,10 @@ class FrozenEncoder:
             kwargs = {"local_path": str(model_path)} if model_path else {}
             self.model = Evo2(name, **kwargs)
         else:
-            from transformers import AutoModel, AutoTokenizer
+            from transformers import AutoModelForMaskedLM, AutoTokenizer
             self.tokenizer = AutoTokenizer.from_pretrained(name, trust_remote_code=True,
                                                            local_files_only=not allow_download)
-            self.model = AutoModel.from_pretrained(name, trust_remote_code=True,
+            self.model = AutoModelForMaskedLM.from_pretrained(name, trust_remote_code=True,
                 torch_dtype=torch.float32, local_files_only=not allow_download).to(device).eval()
 
     @torch.inference_mode()

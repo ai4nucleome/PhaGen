@@ -8,6 +8,7 @@ import torch.nn.functional as F
 from veomni.data.data_collator import DataCollatorWithPaddingMasking
 from veomni.data.dataset import PackingMappingDataset
 from veomni.models.transformers.phagen.configuration_phagen import PhaGenConfig
+from veomni.models.transformers.phagen.generation_utils import MDMGenerationConfig
 from veomni.models.transformers.phagen.modeling_phagen import PhaGenModel
 from veomni.optim import build_optimizer
 
@@ -87,3 +88,20 @@ def test_paper_model_backward_and_original_adamw_step():
     assert gradient is not None and torch.isfinite(gradient).all() and gradient.abs().sum() > 0
     optimizer.step()
     assert not torch.equal(model.to_logits.weight.detach(), before)
+
+
+def test_generation_overrides_do_not_change_shared_config():
+    model = make_model().eval()
+    config = MDMGenerationConfig(
+        max_new_tokens=7, steps=1, alg="entropy", alg_temp=0.0,
+        temperature=1.0, top_p=1.0, top_k=1,
+        mask_token_id=6, pad_token_id=7, num_return_sequences=1,
+    )
+    model.generation_config = config
+    before = config.to_dict()
+    first = model.diffusion_generate(torch.tensor([[0]]), num_return_sequences=2)
+    assert first.shape == (2, 8)
+    assert config.to_dict() == before
+    second = model.diffusion_generate(torch.tensor([[0, 1, 2]]))
+    assert second.shape == (1, 10)
+    assert config.to_dict() == before

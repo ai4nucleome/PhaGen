@@ -256,6 +256,36 @@ def run_dry_run(
     logger.info_rank0("[DryRun] completed without optimizer update.")
 
 
+def save_training_checkpoint(
+    *,
+    checkpointer,
+    checkpoint_root,
+    model,
+    optimizer,
+    lr_scheduler,
+    train_dataloader,
+    environ_meter,
+    global_step,
+    last_saved_path=None,
+):
+    checkpoint_path = os.path.join(checkpoint_root, f"global_step_{global_step}")
+    if checkpoint_path == last_saved_path:
+        return checkpoint_path
+    state = {
+        "model": model,
+        "optimizer": optimizer,
+        "extra_state": {
+            "global_step": global_step,
+            "lr_scheduler": lr_scheduler.state_dict(),
+            "train_dataloader": train_dataloader.state_dict(),
+            "environ_meter": environ_meter.state_dict(),
+            "torch_rng_state": torch.get_rng_state(),
+        },
+    }
+    checkpointer.save(checkpoint_root, state, global_steps=global_step)
+    return checkpoint_path
+
+
 def main():
     args = parse_args(Arguments)
     logger.info(
@@ -624,13 +654,12 @@ def main():
         # 将数据加载器转换为迭代器，支持从任意位置开始迭代（用于从检查点恢复）
         data_iterator = iter(train_dataloader)
         for _ in range(start_step, args.train.train_steps):
-            global_step += 1
-
             try:
                 micro_batches: List[Dict[str, Any]] = next(data_iterator)
             except StopIteration:
                 logger.info(f"epoch:{epoch} Dataloader finished with drop_last {args.data.drop_last}")
                 break
+            global_step += 1
 
             # 打印第一个数据示例
             if global_step == 1:
@@ -742,19 +771,16 @@ def main():
             # 如果启用保存步骤，则在指定步数保存检查点
             if args.train.save_steps and global_step % args.train.save_steps == 0:
                 helper.empty_cache()
-                save_checkpoint_path = os.path.join(args.train.save_checkpoint_path, f"global_step_{global_step}")
-                state = {
-                    "model": model,
-                    "optimizer": optimizer,
-                    "extra_state": {
-                        "global_step": global_step,
-                        "lr_scheduler": lr_scheduler.state_dict(),
-                        "train_dataloader": train_dataloader.state_dict(),
-                        "environ_meter": environ_meter.state_dict(),
-                        "torch_rng_state": torch.get_rng_state(),
-                    },
-                }
-                Checkpointer.save(args.train.save_checkpoint_path, state, global_steps=global_step)
+                save_checkpoint_path = save_training_checkpoint(
+                    checkpointer=Checkpointer,
+                    checkpoint_root=args.train.save_checkpoint_path,
+                    model=model,
+                    optimizer=optimizer,
+                    lr_scheduler=lr_scheduler,
+                    train_dataloader=train_dataloader,
+                    environ_meter=environ_meter,
+                    global_step=global_step,
+                )
                 if args.train.global_rank == 0 and args.train.save_hf_weights and save_checkpoint_path is not None:
                     hf_weights_path = os.path.join(save_checkpoint_path, "hf_ckpt")
                     model_state_dict = ckpt_to_state_dict(
@@ -776,19 +802,16 @@ def main():
         # 保存一个 epoch 的检查点
         if args.train.save_epochs and (epoch + 1) % args.train.save_epochs == 0:
             helper.empty_cache()
-            save_checkpoint_path = os.path.join(args.train.save_checkpoint_path, f"global_step_{global_step}")
-            state = {
-                "model": model,
-                "optimizer": optimizer,
-                "extra_state": {
-                    "global_step": global_step,
-                    "lr_scheduler": lr_scheduler.state_dict(),
-                    "train_dataloader": train_dataloader.state_dict(),
-                    "environ_meter": environ_meter.state_dict(),
-                    "torch_rng_state": torch.get_rng_state(),
-                },
-            }
-            Checkpointer.save(args.train.save_checkpoint_path, state, global_steps=global_step)
+            save_checkpoint_path = save_training_checkpoint(
+                checkpointer=Checkpointer,
+                checkpoint_root=args.train.save_checkpoint_path,
+                model=model,
+                optimizer=optimizer,
+                lr_scheduler=lr_scheduler,
+                train_dataloader=train_dataloader,
+                environ_meter=environ_meter,
+                global_step=global_step,
+            )
             dist.barrier()
             logger.info_rank0(f"Distributed checkpoint saved at {save_checkpoint_path} successfully!")
             # save model in huggingface's format
@@ -806,6 +829,19 @@ def main():
     # torch.cuda.synchronize() 的作用范围是单个GPU设备内部，同步GPU和CPU的操作，确保GPU操作完成之后再继续进行CPU的操作
     # dist.barrier() 是让多个进程/GPU之间同步，确保所有进程/GPU都完成一个阶段的任务后再继续进行下一个阶段的任务
     torch.cuda.synchronize()
+    save_checkpoint_path = save_training_checkpoint(
+        checkpointer=Checkpointer,
+        checkpoint_root=args.train.save_checkpoint_path,
+        model=model,
+        optimizer=optimizer,
+        lr_scheduler=lr_scheduler,
+        train_dataloader=train_dataloader,
+        environ_meter=environ_meter,
+        global_step=global_step,
+        last_saved_path=save_checkpoint_path,
+    )
+    dist.barrier()
+    logger.info_rank0(f"Distributed checkpoint saved at {save_checkpoint_path} successfully!")
     # 释放优化器和学习率调度器
     del optimizer, lr_scheduler
     helper.empty_cache()

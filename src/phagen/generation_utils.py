@@ -229,6 +229,8 @@ class MDMGenerationMixin:
         # Use MDMGenerationConfig as the target class.
         if not isinstance(generation_config, MDMGenerationConfig):
             generation_config = MDMGenerationConfig.from_dict(generation_config.to_dict())
+        else:
+            generation_config = copy.deepcopy(generation_config)
 
         # Update kwargs.
         generation_config.update(**kwargs)

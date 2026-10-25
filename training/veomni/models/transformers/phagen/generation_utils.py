@@ -142,6 +142,8 @@ class MDMGenerationMixin:
         # 使用 MDMGenerationConfig 作为目标类
         if not isinstance(generation_config, MDMGenerationConfig):
             generation_config = MDMGenerationConfig.from_dict(generation_config.to_dict())
+        else:
+            generation_config = copy.deepcopy(generation_config)
 
         # 更新 kwargs
         generation_config.update(**kwargs)
