@@ -1,7 +1,9 @@
 """CPU checks of the recorded paper implementation's training semantics."""
 
+from types import SimpleNamespace
 from unittest.mock import patch
 
+import pytest
 import torch
 import torch.nn.functional as F
 
@@ -105,3 +107,25 @@ def test_generation_overrides_do_not_change_shared_config():
     second = model.diffusion_generate(torch.tensor([[0, 1, 2]]))
     assert second.shape == (1, 10)
     assert config.to_dict() == before
+
+
+@pytest.mark.parametrize("algorithm", ["origin", "entropy", "topk_margin", "maskgit_plus", "p2"])
+def test_generation_uses_same_position_logits_and_preserves_context(algorithm):
+    model = make_model().eval()
+    prompts = torch.tensor([[0, 6, 3, 6, 6], [0, 2, 6, 4, 6]])
+    config = MDMGenerationConfig(
+        max_length=5, steps=1, alg=algorithm, alg_temp=0.0,
+        temperature=1.0, top_p=1.0, top_k=1,
+        mask_token_id=6, pad_token_id=7,
+    )
+
+    def position_logits(input_ids, **kwargs):
+        logits = torch.full((*input_ids.shape, 9), -100.0, device=input_ids.device)
+        targets = torch.arange(1, 6, device=input_ids.device)
+        logits.scatter_(-1, targets.expand_as(input_ids).unsqueeze(-1), 100.0)
+        return SimpleNamespace(logits=logits)
+
+    with patch.object(model, "forward", side_effect=position_logits):
+        generated = model.diffusion_generate(prompts, generation_config=config)
+
+    assert generated.tolist() == [[0, 2, 3, 4, 5], [0, 2, 3, 4, 5]]

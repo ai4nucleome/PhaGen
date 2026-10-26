@@ -230,11 +230,8 @@ class MDMGenerationMixin:
             # is_causal=False is crucial for bidirectional attention
             # 设置双向注意力，is_causal=False 是关键
             outputs = self(input_ids=x, attention_mask=gen_attention_mask, is_causal=False)
+            # Reconstruct each masked token from the logits at the same position.
             logits = outputs.logits
-
-            # CRITICAL: Shift logits to predict the next token, aligning with training
-            # 进行移位操作，与训练时保持一致
-            logits = torch.cat([logits[:, :1], logits[:, :-1]], dim=1)
 
             # Exclude PAD from the generated token distribution.
             if generation_config.pad_token_id is not None:

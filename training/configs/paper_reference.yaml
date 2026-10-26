@@ -15,7 +15,7 @@ data:
   pin_memory: true
 
 train:
-  num_train_epochs: 50
+  num_train_epochs: 100
   output_dir: outputs/paper_reference_new_run
   data_parallel_mode: ddp
   ulysses_parallel_size: 1
@@ -29,8 +29,9 @@ train:
   dyn_bsz_buffer_size: 100
   optimizer: adamw
   lr: 2.0e-5
+  lr_start: 0.0
   lr_decay_style: cosine
-  lr_warmup_ratio: 0.0
+  lr_warmup_ratio: 0.05
   lr_decay_ratio: 1.0
   lr_min: 3.0e-6
   weight_decay: 0.1
@@ -54,4 +55,3 @@ train:
   use_wandb: false
   wandb_project: phagen
   wandb_name: paper_reference_new_run
-

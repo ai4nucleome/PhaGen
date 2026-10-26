@@ -50,16 +50,18 @@ and outputs.
 
 ## Configuration and launch
 
-`configs/paper_reference.yaml` provides the paper training hyperparameters:
+`configs/paper_reference.yaml` follows the training schedule described in the
+manuscript. The launcher defaults to six training ranks, matching the reported
+six-L20 setup:
 
-| Setting | Paper run |
+| Setting | Reference setting |
 | --- | --- |
 | Token canvas | 131,072 |
-| Epochs | 50 |
-| Parallelism | DDP, 4 training ranks |
-| Batch size | Global 72, micro 1; 18 accumulation steps with 4 ranks |
+| Epochs | 100 |
+| Parallelism | DDP, 6 training ranks |
+| Batch size | Global 72, micro 1; 12 accumulation steps with 6 ranks |
 | Optimizer | AdamW, weight decay 0.1, max gradient norm 1.0 |
-| Learning rate | 2e-5, cosine decay to 3e-6, no warmup |
+| Learning rate | Linear warmup from 0 to 2e-5 over the first 5 epochs, then cosine decay to 3e-6 |
 | Seed | 42 |
 | Precision | FP32 parameters with BF16 autocast |
 | Gradient checkpointing / offload | Disabled |
@@ -69,7 +71,7 @@ and outputs.
 Replace the model and data paths, and choose a new output directory:
 
 ```bash
-NPROC_PER_NODE=4 bash training/train.sh \
+NPROC_PER_NODE=6 bash training/train.sh \
   --model.model_path /path/to/initialization_checkpoint \
   --data.train_path /path/to/train.parquet \
   --data.val_path /path/to/validation.parquet \
@@ -82,14 +84,8 @@ set `CUDA_VISIBLE_DEVICES` and supports `NNODES`, `NODE_RANK`, `MASTER_ADDR` and
 `MASTER_PORT`. Relative paths inside the configuration resolve from `training/`.
 By default, the launcher starts a new run with W&B logging disabled. Set
 `--train.use_wandb true` to enable experiment logging.
-
-The initialization weights must be a local Hugging Face checkpoint with model
-configuration, tokenizer and weights. Use the public PhaGen configuration
-(`model_type="phagen"`, `architectures=["PhaGenModel"]`) with the original model
-dimensions and token IDs. The paper run initialized from a preceding run's
-step-2,400 checkpoint, which is currently unavailable.
-Training with another initialization is a new experiment; exact
-retraining to the released paper weights is not established by this reference.
+The warmup ratio is 0.05 of the 100-epoch step budget, corresponding to five
+epochs under the launcher's fixed steps-per-epoch convention.
 
 ## Training behavior
 

@@ -8,17 +8,17 @@ if [[ ${1:-} == --help || ${1:-} == -h ]]; then
 PhaGen paper training reference, using the VeOmni framework.
 
 Usage (from the repository root):
-  NPROC_PER_NODE=4 CONFIG=training/configs/paper_reference.yaml \
+  NPROC_PER_NODE=6 CONFIG=training/configs/paper_reference.yaml \
     bash training/train.sh [--model.model_path /path/to/initialization] \
     [--data.train_path /path/to/train.parquet] \
     [--data.val_path /path/to/validation.parquet] \
     [--train.output_dir /path/to/new/run] [other argument overrides]
 
-Environment: CONFIG, NPROC_PER_NODE (default 4), NNODES, NODE_RANK,
+Environment: CONFIG, NPROC_PER_NODE (default 6), NNODES, NODE_RANK,
 MASTER_ADDR, MASTER_PORT. CUDA_VISIBLE_DEVICES is respected as supplied.
 Relative CONFIG paths resolve from the calling directory; relative paths inside
 the configuration resolve from training/. No old checkpoint is auto-resumed.
-The original paper warm-start weights are not included; see training/README.md.
+See training/README.md for configuration and data preparation.
 HELP
     exit 0
 fi
@@ -38,9 +38,8 @@ cd "$TRAINING_ROOT"
 
 exec torchrun \
     --nnodes="${NNODES:-1}" \
-    --nproc-per-node="${NPROC_PER_NODE:-4}" \
+    --nproc-per-node="${NPROC_PER_NODE:-6}" \
     --node-rank="${NODE_RANK:-0}" \
     --master-addr="${MASTER_ADDR:-127.0.0.1}" \
     --master-port="${MASTER_PORT:-29500}" \
     "${TRAINING_ROOT}/tasks/train_torch_dllm.py" "$CONFIG" "$@"
-

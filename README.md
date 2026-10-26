@@ -27,9 +27,7 @@ including sequence boundaries and padding. Its nine-token vocabulary is `[BOS]`,
 | Training with [VeOmni](https://github.com/ByteDance-Seed/VeOmni) | [training/](training/) | [Environment setup, configuration, and training commands](training/README.md) |
 | Genome generation and seven prediction benchmarks | [evaluation/](evaluation/) | [Task descriptions and evaluation materials](evaluation/README.md) |
 
-Training requires separately prepared training/validation datasets and a local
-initialization checkpoint. See the training documentation for data requirements
-and launch instructions.
+See the training documentation for data requirements and launch instructions.
 
 Evaluation data, formal results, plotting code, and figures are available on
 [Zenodo](https://zenodo.org/records/23477083).

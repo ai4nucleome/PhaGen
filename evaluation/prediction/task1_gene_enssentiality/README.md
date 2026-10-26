@@ -11,5 +11,3 @@ Wild-type and perturbed CDSs are separately extended with genomic flanks to 8,19
 PhaGen and NTv3 use masked-region scores; megaDNA and Evo use native mean log-likelihoods.
 The essentiality score is the wild-type score minus the perturbed score.
 Performance is measured using AUROC and trapezoidal AUPRC, with essential genes positive.
-
-Training-corpus similarity uses summed BLAST alignment coverage and 2,000 sampled training genomes.
