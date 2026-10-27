@@ -33,8 +33,6 @@ Evaluation data, formal results, plotting code, and figures are available on
 [Zenodo](https://zenodo.org/records/23477083).
 Download and extract `PhaGen-complete.zip`; the evaluation materials are under
 `PhaGen/evaluation/`.
-The corrected BLASTN coverage tables, plotting script, and figure for Fig. S5
-are included here; see the [generation instructions](evaluation/generation/task1_unconditional_generation/README.md#blastn-merged-query-coverage).
 
 ## Install
 
