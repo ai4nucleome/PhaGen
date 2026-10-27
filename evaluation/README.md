@@ -8,6 +8,9 @@ Download `PhaGen-complete.zip` for the complete materials, which preserve the
 evaluation directory layout. The archive includes the PhaGen checkpoint under
 `PhaGen/models/PhaGen/`. Baseline model weights and full external reference
 databases are obtained separately.
+The corrected BLASTN coverage tables, plotting script, and figure for Fig. S5
+are also included in this repository; see the
+[generation instructions](generation/task1_unconditional_generation/README.md#blastn-merged-query-coverage).
 
 ## Generation
 

@@ -107,6 +107,9 @@ wandb/
 /evaluation/**/*.tiff
 /evaluation/**/*.webp
 
+# Standalone reproduction of the current BLASTN coverage figure.
+!/evaluation/generation/task1_unconditional_generation/scripts/sequence_analysis/plot_blastn_coverage.py
+
 # Review-only materials are excluded from release packages.
 /evaluation/**/review_s8b/
 

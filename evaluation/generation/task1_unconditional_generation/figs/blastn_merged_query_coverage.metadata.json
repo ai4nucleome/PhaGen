@@ -1,0 +1,16 @@
+{
+  "queries_sha256": "4aa109e988cb1a3b64c1a7d376206176040de72d3ab8d2b829c1e1444b1f667e",
+  "coverage_definition": "Union of inclusive query intervals across all reported targets and HSPs; overlaps count once; no-hit queries have zero coverage.",
+  "n_queries": 6058,
+  "n_no_hit": 4596,
+  "n_coverage_le10": 6015,
+  "coverage_le10_pct": 99.29019478375702,
+  "jitter_seed": 20261026,
+  "jitter_axis": "categorical x axis only; coverage values are unchanged",
+  "y_scale": {
+    "name": "symlog",
+    "linthresh": 0.01,
+    "linscale": 0.7
+  },
+  "dpi": 300
+}
